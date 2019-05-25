@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Ramzaan Photo Frames</string>
+    <string name="edit">Edit</string>
+    <string name="filter">Filters</string>
+    <string name="effect">Effect</string>
+    <string name="frames">Frames</string>
+    <string name="pic">Pic</string>
+    <string name="text">Text</string>
+
+    <string name="textstyltext">Apps Beauty</string>
+    <string name="share">Share</string>
+    <string name="view_files">View Files</string>
+
+
+    // test adds
+    <string name="app_id">""</string>
+    <string name="banner_ad_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="interstitial_Ad_id_entry">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="interstitial_Ad_id_save">ca-app-pub-3940256099942544/1033173712</string>
+
+    //live adds
+    <!--<string name="app_id">ca-app-pub-2925546892673968~8601368690</string>
+    <string name="banner_ad_id">ca-app-pub-2925546892673968/9806639159</string>
+    <string name="interstitial_Ad_id_entry">ca-app-pub-2925546892673968/1469941993</string>
+    <string name="interstitial_Ad_id_save">ca-app-pub-2925546892673968/4634203522</string>-->
+</resources>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/btn_wall"
+        android:icon="@mipmap/ic_set_wall"
+        app:showAsAction="always"
+        android:title=" ">
+    </item>
+
+    <item
+        android:id="@+id/btn_delete"
+        android:icon="@mipmap/ic_delete"
+        app:showAsAction="always"
+        android:title=" ">
+    </item>
+
+
+
+</menu>
