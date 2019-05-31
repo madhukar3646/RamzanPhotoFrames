@@ -41,9 +41,34 @@ public interface RetrofitApis {
                         .build();
                 return retrofit.create(RetrofitApis.class);
             }
+
+            public static RetrofitApis createRamzaanFrames(Context contextOfApplication) {
+
+                // default time out is 15 seconds
+                OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
+                        .connectTimeout(60, TimeUnit.SECONDS)
+                        .readTimeout(60, TimeUnit.SECONDS)
+                        .writeTimeout(60, TimeUnit.SECONDS)
+                        .build();
+
+                Gson gson = new GsonBuilder()
+                        .setLenient()
+                        .create();
+
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(Utils.RAMZAANPFS_BASE_URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .client(okHttpClient)
+                        .build();
+                return retrofit.create(RetrofitApis.class);
+            }
         }
 
     @GET("playstoreappslist.txt")
     Call<PlaystoreappslistingResponse> getAppsList();
+
+    @GET("ramzaanphotoframes.txt")
+    Call<FramesModel> getFramesList();
 }
 

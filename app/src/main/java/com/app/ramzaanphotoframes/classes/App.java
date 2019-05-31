@@ -1,9 +1,12 @@
 package com.app.ramzaanphotoframes.classes;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class App {
+public class App implements Parcelable {
 
     @SerializedName("appname")
     @Expose
@@ -14,6 +17,24 @@ public class App {
     @SerializedName("appurl")
     @Expose
     private String appurl;
+
+    protected App(Parcel in) {
+        appname = in.readString();
+        appicon = in.readString();
+        appurl = in.readString();
+    }
+
+    public static final Creator<App> CREATOR = new Creator<App>() {
+        @Override
+        public App createFromParcel(Parcel in) {
+            return new App(in);
+        }
+
+        @Override
+        public App[] newArray(int size) {
+            return new App[size];
+        }
+    };
 
     public String getAppname() {
         return appname;
@@ -37,5 +58,17 @@ public class App {
 
     public void setAppurl(String appurl) {
         this.appurl = appurl;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(appname);
+        dest.writeString(appicon);
+        dest.writeString(appurl);
     }
 }
