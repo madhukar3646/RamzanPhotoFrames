@@ -55,8 +55,8 @@ public class AppsParkAdsAdapter extends RecyclerView.Adapter<AppsParkAdsAdapter.
     public void onBindViewHolder(AppsViewHolder holder, int position) {
 
 
-        holder.imgapp.getLayoutParams().height = (width / 6);
-        holder.imgapp.getLayoutParams().width = width / 6;
+        holder.imgapp.getLayoutParams().height = (width / 4);
+        holder.imgapp.getLayoutParams().width = width / 4;
         holder.layout_cardview.getLayoutParams().width=width/2;
         holder.txtappName.getLayoutParams().width = width / 3;
         holder.txtappName.setSelected(true);
