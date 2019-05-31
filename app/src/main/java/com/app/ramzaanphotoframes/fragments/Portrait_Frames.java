@@ -9,8 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.ramzaanphotoframes.R;
-import com.app.ramzaanphotoframes.activities.Frames_Activity;
-import com.app.ramzaanphotoframes.adapters.Frames_Adapter;
+import com.app.ramzaanphotoframes.adapters.PortraitFrames_Adapter;
 
 import java.util.ArrayList;
 
@@ -40,7 +39,7 @@ public class Portrait_Frames extends Fragment{
         RecyclerView frames_recycle_view = (RecyclerView)view.findViewById(R.id.frames_recycle_view);
         frames_recycle_view.setHasFixedSize(true);
         frames_recycle_view.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-        //Frames_Adapter custom_adapter = new Frames_Adapter(getActivity(), frame_items);
-        //frames_recycle_view.setAdapter(custom_adapter);
+        PortraitFrames_Adapter custom_adapter = new PortraitFrames_Adapter(getActivity(), portrait_list);
+        frames_recycle_view.setAdapter(custom_adapter);
     }
 }

@@ -10,15 +10,16 @@ import android.widget.ImageView;
 import com.app.ramzaanphotoframes.R;
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+
 public class PortraitFrames_Adapter extends RecyclerView.Adapter<PortraitFrames_Adapter.AdapterViewHolder> {
-    int[] listsize;
+   private ArrayList<String> portrait_list;
     private Context context;
 
 
-    public PortraitFrames_Adapter(Context context, int[] filepaths) {
-        this.listsize = filepaths;
+    public PortraitFrames_Adapter(Context context, ArrayList<String> portrait_list) {
+        this.portrait_list = portrait_list;
         this.context = context;
-
     }
 
     class AdapterViewHolder extends RecyclerView.ViewHolder {
@@ -36,7 +37,7 @@ public class PortraitFrames_Adapter extends RecyclerView.Adapter<PortraitFrames_
     @Override
     public int getItemCount() {
 
-        return listsize.length;
+        return portrait_list.size();
     }
 
     @Override
@@ -52,11 +53,8 @@ public class PortraitFrames_Adapter extends RecyclerView.Adapter<PortraitFrames_
 
         holder.img_frame.getLayoutParams().height = (int) ((context.getResources().getDisplayMetrics().heightPixels) /3);
         holder.img_frame.getLayoutParams().width = (int) ((context.getResources().getDisplayMetrics().widthPixels) / 2);
-        Glide.with(context).load(listsize[position])
+        Glide.with(context).load(portrait_list.get(position))
                 .placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher)
                 .into(holder.img_frame);
-
-
     }
-
 }
