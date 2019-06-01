@@ -10,19 +10,18 @@ import android.widget.ImageView;
 import com.app.ramzaanphotoframes.R;
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+
 
 public class Image_Adapter extends RecyclerView.Adapter<Image_Adapter.AdapterViewHolder> {
-    private int[] items_img;
+    private ArrayList<String> landscape_list;
     private Context context;
 
 
-    public Image_Adapter(Context context, int[] dp_items_img) {
-        this.items_img = dp_items_img;
+    public Image_Adapter(Context context, ArrayList<String> landscape_list) {
+        this.landscape_list = landscape_list;
         this.context = context;
-
     }
-
-
 
     class AdapterViewHolder extends RecyclerView.ViewHolder {
         ImageView img;
@@ -37,7 +36,7 @@ public class Image_Adapter extends RecyclerView.Adapter<Image_Adapter.AdapterVie
     @Override
     public int getItemCount() {
 
-        return items_img.length;
+        return landscape_list.size();
     }
 
     @Override
@@ -57,11 +56,9 @@ public class Image_Adapter extends RecyclerView.Adapter<Image_Adapter.AdapterVie
     public void onBindViewHolder(AdapterViewHolder holder, int position) {
 
 
-            Glide.with(context).load(items_img[position])
+            Glide.with(context).load(landscape_list.get(position))
                     .placeholder(R.drawable.load_icon).error(R.mipmap.ic_launcher)
                     .into(holder.img);
-
-
     }
 
 }

@@ -48,6 +48,7 @@ import com.app.ramzaanphotoframes.colorPicker.ColorPickerDialog;
 import com.app.ramzaanphotoframes.landscape_module.adapters.Image_Adapter;
 import com.app.ramzaanphotoframes.recycler_click_listener.ClickListener;
 import com.app.ramzaanphotoframes.recycler_click_listener.RecyclerTouchListener;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
@@ -65,20 +66,13 @@ public class Editing_Activity_lpf extends AppCompatActivity implements View.OnCl
 
     private int screenWidth, screenHeight;
     private RelativeLayout root_main_layout;
-    private int frame_items[] = {R.drawable.lf1, R.drawable.lf2,
-            R.drawable.lf3, R.drawable.lf4, R.drawable.lf5,
-            R.drawable.lf6, R.drawable.lf7, R.drawable.lf8,
-            R.drawable.lf9, R.drawable.lf10, R.drawable.lf11,
-            R.drawable.lf12, R.drawable.lf13, R.drawable.lf14,
-            R.drawable.lf15, R.drawable.lf16, R.drawable.lf17,
-            R.drawable.lf18,R.drawable.lf19,R.drawable.lf20};
-
-    private RelativeLayout options_layout, frame_img_view_layout;
+    private RelativeLayout options_layout;
+    private ImageView frame_img_view_layout;
     private RecyclerView frames_recycler_view;
     private ImageView user_img_view;
 
     private Uri myUri;
-    private int selectedFramePosition;
+    private String selectedframe;
     private Bitmap bitmap;
 
 
@@ -129,6 +123,7 @@ public class Editing_Activity_lpf extends AppCompatActivity implements View.OnCl
     private InterstitialAd mInterstitialAd;
 
     private Dialog dialog;
+    private ArrayList<String> landscape_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,7 +170,8 @@ public class Editing_Activity_lpf extends AppCompatActivity implements View.OnCl
         if (getIntent().getExtras().getString("imageUri") != null) {
             this.myUri = Uri.parse(getIntent().getExtras().getString("imageUri"));
         }
-        this.selectedFramePosition = getIntent().getExtras().getInt("selectedFramePosition");
+        this.selectedframe = getIntent().getExtras().getString("selectedFramePosition");
+        this.landscape_list=getIntent().getStringArrayListExtra("frames");
 
         try {
             bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), myUri);
@@ -188,8 +184,10 @@ public class Editing_Activity_lpf extends AppCompatActivity implements View.OnCl
         initialization_img_vews();
         initialization_recycler_view();
         textLayoutIniti();
-        frame_img_view_layout = (RelativeLayout) findViewById(R.id.frame_img_view_layout);
-        frame_img_view_layout.setBackgroundResource(frame_items[selectedFramePosition]);
+        frame_img_view_layout = (ImageView) findViewById(R.id.frame_img_view_layout);
+        Glide.with(context).load(selectedframe)
+                .placeholder(R.drawable.loading_icon).error(R.drawable.loading_icon)
+                .into(frame_img_view_layout);
 
         user_img_view = findViewById(R.id.user_img_view);
         Touch touch = new Touch();
@@ -256,7 +254,7 @@ public class Editing_Activity_lpf extends AppCompatActivity implements View.OnCl
         frames_recycler_view.setHasFixedSize(true);
         frames_recycler_view.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL));
 
-        Image_Adapter image_adapter = new Image_Adapter(Editing_Activity_lpf.this, frame_items);
+        Image_Adapter image_adapter = new Image_Adapter(Editing_Activity_lpf.this, landscape_list);
         frames_recycler_view.setAdapter(image_adapter);
 
         frames_recycler_view.addOnItemTouchListener(new RecyclerTouchListener(Editing_Activity_lpf.this,
@@ -264,7 +262,9 @@ public class Editing_Activity_lpf extends AppCompatActivity implements View.OnCl
             @Override
             public void onClick(View view, int position) {
 
-                frame_img_view_layout.setBackgroundResource(frame_items[position]);
+                Glide.with(context).load(landscape_list.get(position))
+                        .placeholder(R.drawable.loading_icon).error(R.drawable.loading_icon)
+                        .into(frame_img_view_layout);
                 frames_recycler_view.setVisibility(View.GONE);
             }
 
