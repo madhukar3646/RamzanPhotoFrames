@@ -57,7 +57,7 @@ public class Image_Adapter extends RecyclerView.Adapter<Image_Adapter.AdapterVie
 
 
             Glide.with(context).load(landscape_list.get(position))
-                    .placeholder(R.drawable.load_icon).error(R.mipmap.ic_launcher)
+                    .placeholder(R.drawable.loading_icon).error(R.drawable.loading_icon)
                     .into(holder.img);
     }
 
