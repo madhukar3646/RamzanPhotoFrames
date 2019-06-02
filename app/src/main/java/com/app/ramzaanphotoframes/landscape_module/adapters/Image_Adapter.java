@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.app.ramzaanphotoframes.R;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 
@@ -45,8 +46,6 @@ public class Image_Adapter extends RecyclerView.Adapter<Image_Adapter.AdapterVie
         View rowView = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.bg_img_layout_lpf, parent, false);
 
-
-
         rowView.getLayoutParams().height = (int) ((context.getResources().getDisplayMetrics().widthPixels) / 4);
         rowView.getLayoutParams().width = (int) ((context.getResources().getDisplayMetrics().widthPixels) / 2);
 
@@ -55,10 +54,9 @@ public class Image_Adapter extends RecyclerView.Adapter<Image_Adapter.AdapterVie
 
     public void onBindViewHolder(AdapterViewHolder holder, int position) {
 
-
             Glide.with(context).load(landscape_list.get(position))
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .placeholder(R.drawable.loading_icon).error(R.drawable.loading_icon)
                     .into(holder.img);
     }
-
 }

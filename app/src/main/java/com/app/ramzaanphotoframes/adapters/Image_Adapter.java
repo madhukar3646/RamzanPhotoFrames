@@ -9,15 +9,18 @@ import android.widget.ImageView;
 
 import com.app.ramzaanphotoframes.R;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
+import java.util.ArrayList;
 
 
 public class Image_Adapter extends RecyclerView.Adapter<Image_Adapter.AdapterViewHolder> {
-    private int[] items_img;
+    private ArrayList<String> portrait_list;
     private Context context;
 
 
-    public Image_Adapter(Context context, int[] dp_items_img) {
-        this.items_img = dp_items_img;
+    public Image_Adapter(Context context, ArrayList<String> portrait_list) {
+        this.portrait_list = portrait_list;
         this.context = context;
 
     }
@@ -37,7 +40,7 @@ public class Image_Adapter extends RecyclerView.Adapter<Image_Adapter.AdapterVie
     @Override
     public int getItemCount() {
 
-        return items_img.length;
+        return portrait_list.size();
     }
 
     @Override
@@ -46,8 +49,6 @@ public class Image_Adapter extends RecyclerView.Adapter<Image_Adapter.AdapterVie
         View rowView = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.bg_img_layout, parent, false);
 
-
-
         rowView.getLayoutParams().height = (int) ((context.getResources().getDisplayMetrics().widthPixels) / 2);
         rowView.getLayoutParams().width = (int) ((context.getResources().getDisplayMetrics().widthPixels) / 3);
 
@@ -55,13 +56,9 @@ public class Image_Adapter extends RecyclerView.Adapter<Image_Adapter.AdapterVie
     }
 
     public void onBindViewHolder(AdapterViewHolder holder, int position) {
-
-
-            Glide.with(context).load(items_img[position])
-                    .placeholder(R.drawable.load_icon).error(R.mipmap.ic_launcher)
+            Glide.with(context).load(portrait_list.get(position))
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .placeholder(R.drawable.loading_icon).error(R.drawable.loading_icon)
                     .into(holder.img);
-
-
     }
-
 }

@@ -46,6 +46,8 @@ import com.app.ramzaanphotoframes.classes.ConnectionDetector;
 import com.app.ramzaanphotoframes.colorPicker.ColorPickerDialog;
 import com.app.ramzaanphotoframes.recycler_click_listener.ClickListener;
 import com.app.ramzaanphotoframes.recycler_click_listener.RecyclerTouchListener;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
@@ -63,20 +65,13 @@ public class EditingPortraitActivity extends AppCompatActivity implements View.O
 
     private int screenWidth, screenHeight;
     private RelativeLayout root_main_layout;
-    private int frame_items[] = {R.drawable.frame1, R.drawable.frame2,
-            R.drawable.frame3, R.drawable.frame4, R.drawable.frame5,
-            R.drawable.frame6, R.drawable.frame7, R.drawable.frame8,
-            R.drawable.frame9, R.drawable.frame10, R.drawable.frame11,
-            R.drawable.frame12, R.drawable.frame13, R.drawable.frame14,
-            R.drawable.frame15, R.drawable.frame16, R.drawable.frame17,
-            R.drawable.frame18,R.drawable.frame19,R.drawable.frame20};
-
-    private RelativeLayout options_layout, frame_img_view_layout;
+    private RelativeLayout options_layout;
+    private ImageView frame_img_view_layout;
     private RecyclerView frames_recycler_view;
     private ImageView user_img_view;
 
     private Uri myUri;
-    private int selectedFramePosition;
+    private String selectedframe;
     private Bitmap bitmap;
 
 
@@ -127,6 +122,7 @@ public class EditingPortraitActivity extends AppCompatActivity implements View.O
     private InterstitialAd mInterstitialAd;
 
     private Dialog dialog;
+    private ArrayList<String> portrait_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,7 +168,8 @@ public class EditingPortraitActivity extends AppCompatActivity implements View.O
         if (getIntent().getExtras().getString("imageUri") != null) {
             this.myUri = Uri.parse(getIntent().getExtras().getString("imageUri"));
         }
-        this.selectedFramePosition = getIntent().getExtras().getInt("selectedFramePosition");
+        this.selectedframe = getIntent().getExtras().getString("selectedFramePosition");
+        this.portrait_list=getIntent().getStringArrayListExtra("frames");
 
         try {
             bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), myUri);
@@ -185,8 +182,11 @@ public class EditingPortraitActivity extends AppCompatActivity implements View.O
         initialization_img_vews();
         initialization_recycler_view();
         textLayoutIniti();
-        frame_img_view_layout = (RelativeLayout) findViewById(R.id.frame_img_view_layout);
-        frame_img_view_layout.setBackgroundResource(frame_items[selectedFramePosition]);
+        frame_img_view_layout = (ImageView) findViewById(R.id.frame_img_view_layout);
+        Glide.with(context).load(selectedframe)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .placeholder(R.drawable.loading_icon).error(R.drawable.loading_icon)
+                .into(frame_img_view_layout);
 
         user_img_view = findViewById(R.id.user_img_view);
         Touch touch = new Touch();
@@ -243,7 +243,7 @@ public class EditingPortraitActivity extends AppCompatActivity implements View.O
         frames_recycler_view.setHasFixedSize(true);
         frames_recycler_view.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL));
 
-        Image_Adapter image_adapter = new Image_Adapter(EditingPortraitActivity.this, frame_items);
+        Image_Adapter image_adapter = new Image_Adapter(EditingPortraitActivity.this, portrait_list);
         frames_recycler_view.setAdapter(image_adapter);
 
         frames_recycler_view.addOnItemTouchListener(new RecyclerTouchListener(EditingPortraitActivity.this,
@@ -251,7 +251,10 @@ public class EditingPortraitActivity extends AppCompatActivity implements View.O
             @Override
             public void onClick(View view, int position) {
 
-                frame_img_view_layout.setBackgroundResource(frame_items[position]);
+                Glide.with(context).load(portrait_list.get(position))
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .placeholder(R.drawable.loading_icon).error(R.drawable.loading_icon)
+                        .into(frame_img_view_layout);
                 frames_recycler_view.setVisibility(View.GONE);
             }
 

@@ -68,7 +68,6 @@ public class Share_Activity_lpf extends AppCompatActivity {
     private ConnectionDetector cd;
     private boolean isInternetPresent;
     private AdView adView;
-    private Dialog dialog;
     private RelativeLayout more_apps_lay_out;
     private RecyclerView more_app_recycler_view;
 
@@ -81,11 +80,6 @@ public class Share_Activity_lpf extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         screenWidth = metrics.widthPixels;
         screenHeight = metrics.heightPixels;
-
-        dialog = new Dialog(this,
-                android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
-        dialog.setContentView(R.layout.servicecall_loading);
-        dialog.setCancelable(false);
 
         more_apps_lay_out=(RelativeLayout)findViewById(R.id.more_apps_lay_out);
         more_apps_lay_out.setVisibility(View.GONE);
@@ -179,12 +173,9 @@ public class Share_Activity_lpf extends AppCompatActivity {
 
     public void getPlaystoreApps(){
         Call<PlaystoreappslistingResponse> call= RetrofitApis.Factory.create(Share_Activity_lpf.this).getAppsList();
-        dialog.show();
         call.enqueue(new Callback<PlaystoreappslistingResponse>() {
             @Override
             public void onResponse(Call<PlaystoreappslistingResponse> call, Response<PlaystoreappslistingResponse> response) {
-                if(dialog!=null)
-                    dialog.dismiss();
                 if(response.isSuccessful()){
                     PlaystoreappslistingResponse playstoreappslistingResponse=response.body();
                     if(playstoreappslistingResponse!=null)
@@ -198,8 +189,7 @@ public class Share_Activity_lpf extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<PlaystoreappslistingResponse> call, Throwable t) {
-                if(dialog!=null)
-                    dialog.dismiss();
+
             }
         });
     }

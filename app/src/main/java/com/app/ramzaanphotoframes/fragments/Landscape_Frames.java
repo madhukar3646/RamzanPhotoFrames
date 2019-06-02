@@ -30,13 +30,12 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.app.ramzaanphotoframes.R;
-import com.app.ramzaanphotoframes.activities.EditingPortraitActivity;
-import com.app.ramzaanphotoframes.activities.Frames_Activity;
 import com.app.ramzaanphotoframes.adapters.LandscapeFramesAdapter;
 import com.app.ramzaanphotoframes.classes.ImagePath_MarshMallow;
+import com.app.ramzaanphotoframes.classes.OnDisplayAddListener;
+import com.app.ramzaanphotoframes.classes.OnFrameClickListener;
 import com.app.ramzaanphotoframes.landscape_module.activities.Editing_Activity_lpf;
-import com.app.ramzaanphotoframes.recycler_click_listener.ClickListener;
-import com.app.ramzaanphotoframes.recycler_click_listener.RecyclerTouchListener;
+import com.app.ramzaanphotoframes.landscape_module.activities.Share_Activity_lpf;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -50,7 +49,7 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.app.Activity.RESULT_OK;
 
-public class Landscape_Frames extends Fragment{
+public class Landscape_Frames extends Fragment implements OnFrameClickListener {
 
     private ArrayList<String> landscape_list;
 
@@ -62,13 +61,21 @@ public class Landscape_Frames extends Fragment{
     private Uri capturedFileUri;
     private String getImageUrl = "";
     private int selectedFramePosition = 0;
+    private boolean isAlbums=false;
+    private OnDisplayAddListener displayAddListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             landscape_list = getArguments().getStringArrayList("Landscape");
+            isAlbums=getArguments().getBoolean("isAlbum");
         }
+    }
+
+    public void setOnDisplayAddListener(OnDisplayAddListener displayAddListener)
+    {
+        this.displayAddListener=displayAddListener;
     }
 
     @Override
@@ -86,86 +93,8 @@ public class Landscape_Frames extends Fragment{
         frames_recycle_view.setHasFixedSize(true);
         frames_recycle_view.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         LandscapeFramesAdapter custom_adapter = new LandscapeFramesAdapter(getActivity(), landscape_list);
+        custom_adapter.setOnFrameClickListener(this,isAlbums);
         frames_recycle_view.setAdapter(custom_adapter);
-
-        frames_recycle_view.addOnItemTouchListener(new RecyclerTouchListener(getActivity(),
-                frames_recycle_view, new ClickListener() {
-            @Override
-            public void onClick(View view, final int position) {
-
-                selectedFramePosition = position;
-
-                alertDialog = new Dialog(getContext());
-                alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                alertDialog.setContentView(R.layout.imageoption);
-                alertDialog.setCancelable(false);
-
-                ImageView imageView_close = (ImageView) alertDialog.findViewById(R.id.imageView_close);
-                imageView_close.setColorFilter(Color.parseColor("#fad375"));
-                imageView_close.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        alertDialog.dismiss();
-                    }
-                });
-                ImageView gallry = (ImageView) alertDialog.findViewById(R.id.imageView_gallery);
-                // gallry.setColorFilter(Color.parseColor("#4d3b53"));
-
-                ImageView camera = (ImageView) alertDialog.findViewById(R.id.imageView_camera);
-                //camera.setColorFilter(Color.parseColor("#4d3b53"));
-
-
-                gallry.setOnClickListener(new View.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.M)
-                    @Override
-                    public void onClick(View view) {
-                        if (ContextCompat.checkSelfPermission(getContext(), READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                                ContextCompat.checkSelfPermission(getContext(), WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                            GalleryPictureIntent();
-
-                        } else {
-                            if (shouldShowRequestPermissionRationale(READ_EXTERNAL_STORAGE)) {
-                                //Toast.makeText(getApplicationContext(), "Permission Needed.", Toast.LENGTH_LONG).show();
-                            }
-                            requestPermissions(new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, GALLERY_RESULT);
-                        }
-                        alertDialog.dismiss();
-                    }
-                });
-
-                camera.setOnClickListener(new View.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.M)
-                    @Override
-                    public void onClick(View view) {
-                        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) ==
-                                PackageManager.PERMISSION_GRANTED) {
-                            dispatchTakenPictureIntent();
-
-                        } else {
-                            if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-                                //Toast.makeText(getApplicationContext(), "Permission Needed.", Toast.LENGTH_LONG).show();
-                            }
-                            requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA_RESULT);
-                        }
-                        alertDialog.dismiss();
-                    }
-                });
-
-
-                alertDialog.show();
-                Display display1 = ((WindowManager)getContext().getSystemService(Frames_Activity.WINDOW_SERVICE)).getDefaultDisplay();
-                int width1 = display1.getWidth();
-                int height1 = display1.getHeight();
-                alertDialog.getWindow().setLayout((width1 - width1 / 5), (int) (height1 * 30) / 100);
-                alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        }));
     }
 
     private void dispatchTakenPictureIntent() {
@@ -293,5 +222,86 @@ public class Landscape_Frames extends Fragment{
                 .setAspectRatio(1,1)
                 .start(this);*/
 
+    }
+
+    @Override
+    public void onFrameClick(int position) {
+
+        selectedFramePosition = position;
+
+        alertDialog = new Dialog(getContext());
+        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        alertDialog.setContentView(R.layout.imageoption);
+        alertDialog.setCancelable(false);
+
+        ImageView imageView_close = (ImageView) alertDialog.findViewById(R.id.imageView_close);
+        imageView_close.setColorFilter(Color.parseColor("#fad375"));
+        imageView_close.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        ImageView gallry = (ImageView) alertDialog.findViewById(R.id.imageView_gallery);
+        // gallry.setColorFilter(Color.parseColor("#4d3b53"));
+
+        ImageView camera = (ImageView) alertDialog.findViewById(R.id.imageView_camera);
+        //camera.setColorFilter(Color.parseColor("#4d3b53"));
+
+
+        gallry.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+                if (ContextCompat.checkSelfPermission(getContext(), READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                        ContextCompat.checkSelfPermission(getContext(), WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    GalleryPictureIntent();
+
+                } else {
+                    if (shouldShowRequestPermissionRationale(READ_EXTERNAL_STORAGE)) {
+                        //Toast.makeText(getApplicationContext(), "Permission Needed.", Toast.LENGTH_LONG).show();
+                    }
+                    requestPermissions(new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, GALLERY_RESULT);
+                }
+                alertDialog.dismiss();
+            }
+        });
+
+        camera.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) ==
+                        PackageManager.PERMISSION_GRANTED) {
+                    dispatchTakenPictureIntent();
+
+                } else {
+                    if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+                        //Toast.makeText(getApplicationContext(), "Permission Needed.", Toast.LENGTH_LONG).show();
+                    }
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA_RESULT);
+                }
+                alertDialog.dismiss();
+            }
+        });
+
+
+        alertDialog.show();
+        Display display1 = ((WindowManager)getContext().getSystemService(getActivity().WINDOW_SERVICE)).getDefaultDisplay();
+        int width1 = display1.getWidth();
+        int height1 = display1.getHeight();
+        alertDialog.getWindow().setLayout((width1 - width1 / 5), (int) (height1 * 30) / 100);
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+    }
+
+    @Override
+    public void onAlbumClick(int position) {
+
+        Intent intent = new Intent(getActivity(), Share_Activity_lpf.class);
+        intent.putExtra("final_image_path", landscape_list.get(position));
+        startActivity(intent);
+        if(displayAddListener!=null)
+            displayAddListener.OnDisplayInterstitialAdd();
     }
 }

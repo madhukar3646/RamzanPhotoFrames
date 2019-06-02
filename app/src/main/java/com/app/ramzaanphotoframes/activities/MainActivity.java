@@ -1,7 +1,5 @@
 package com.app.ramzaanphotoframes.activities;
 
-
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,36 +11,18 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableStringBuilder;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.app.ramzaanphotoframes.R;
-import com.app.ramzaanphotoframes.adapters.AppsParkAdsAdapter;
-import com.app.ramzaanphotoframes.classes.App;
 import com.app.ramzaanphotoframes.classes.ConnectionDetector;
-import com.app.ramzaanphotoframes.classes.PlaystoreappslistingResponse;
-import com.app.ramzaanphotoframes.classes.RetrofitApis;
-import com.app.ramzaanphotoframes.landscape_module.activities.Albums_Activity_lpf;
-import com.app.ramzaanphotoframes.landscape_module.activities.Frames_Activity_lpf;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-
-
-import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -52,14 +32,10 @@ public class MainActivity extends AppCompatActivity {
     private final int CAMERA_RESULT = 101, GALLERY_RESULT = 102;
     private int screen_width, screen_height;
 
-
     private ConnectionDetector cd;
     private boolean isInternetPresent;
     private AdView adView;
     private boolean isStartClicked=true;
-    private Dialog dialog;
-    private RelativeLayout more_apps_lay_out;
-    private RecyclerView more_app_recycler_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,15 +48,9 @@ public class MainActivity extends AppCompatActivity {
         cd = new ConnectionDetector(this);
         isInternetPresent = cd.isConnectingToInternet();
 
-        dialog = new Dialog(this,
-                android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
-        dialog.setContentView(R.layout.servicecall_loading);
-        dialog.setCancelable(false);
-
-        more_apps_lay_out=(RelativeLayout)findViewById(R.id.more_apps_lay_out);
-        more_apps_lay_out.setVisibility(View.GONE);
-        more_app_recycler_view=(RecyclerView)findViewById(R.id.more_app_recycler_view);
-        more_app_recycler_view.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        RelativeLayout top_layout=(RelativeLayout)findViewById(R.id.top_layout);
+        top_layout.getLayoutParams().height=(screen_height*40)/100;
+        top_layout.getLayoutParams().width=screen_width;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
@@ -91,7 +61,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 isStartClicked=true;
-                displayFrameSelectionDialog();
+                Intent intent=new Intent(MainActivity.this,HybridFrames_Activity.class);
+                intent.putExtra("isAlbums",false);
+                startActivity(intent);
             }
         });
 
@@ -101,7 +73,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 isStartClicked=false;
                 if (ContextCompat.checkSelfPermission(MainActivity.this, READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(MainActivity.this, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    displayFrameSelectionDialog();
+                    Intent intent=new Intent(MainActivity.this,HybridFrames_Activity.class);
+                    intent.putExtra("isAlbums",true);
+                    startActivity(intent);
                 } else {
                     if (shouldShowRequestPermissionRationale(READ_EXTERNAL_STORAGE)) {
                         //Toast.makeText(getApplicationContext(), "Permission Needed.", Toast.LENGTH_LONG).show();
@@ -125,35 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (isInternetPresent) {
             displayAd();
-            getPlaystoreApps();
         }
-    }
-
-    public void getPlaystoreApps(){
-        Call<PlaystoreappslistingResponse> call= RetrofitApis.Factory.create(MainActivity.this).getAppsList();
-        dialog.show();
-        call.enqueue(new Callback<PlaystoreappslistingResponse>() {
-            @Override
-            public void onResponse(Call<PlaystoreappslistingResponse> call, Response<PlaystoreappslistingResponse> response) {
-                if(dialog!=null)
-                    dialog.dismiss();
-                if(response.isSuccessful()){
-                    PlaystoreappslistingResponse playstoreappslistingResponse=response.body();
-                    if(playstoreappslistingResponse!=null)
-                    {
-                        List<App> appslist=playstoreappslistingResponse.getApps();
-                        more_app_recycler_view.setAdapter(new AppsParkAdsAdapter(MainActivity.this,appslist));
-                        more_apps_lay_out.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<PlaystoreappslistingResponse> call, Throwable t) {
-                if(dialog!=null)
-                    dialog.dismiss();
-            }
-        });
     }
 
     @Override
@@ -180,14 +126,11 @@ public class MainActivity extends AppCompatActivity {
 
             return true;
         }
-
-
-
         return super.onOptionsItemSelected(item);
     }
+
     public void No_Internet_Dialouge()
     {
-
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(
                 MainActivity.this);
         mBuilder.setMessage("Sorry No Internet Connection please try again later");
@@ -225,7 +168,9 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == GALLERY_RESULT) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
 
-                displayFrameSelectionDialog();
+                Intent intent=new Intent(MainActivity.this,HybridFrames_Activity.class);
+                intent.putExtra("isAlbums",true);
+                startActivity(intent);
 
             } else {
                 // Toast.makeText(getApplicationContext(), "Permission Needed.", Toast.LENGTH_LONG).show();
@@ -338,43 +283,4 @@ public class MainActivity extends AppCompatActivity {
         mBuilder.create();
         mBuilder.show();
     }
-
-
-    private void displayFrameSelectionDialog()
-    {
-        final Dialog dialog=new Dialog(MainActivity.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_pfandlf_selection);
-        dialog.setCanceledOnTouchOutside(true);
-        dialog.setCancelable(true);
-
-        RelativeLayout layout_landscape=(RelativeLayout) dialog.findViewById(R.id.layout_landscape);
-        RelativeLayout layout_portrait=(RelativeLayout)dialog.findViewById(R.id.layout_portrait);
-
-        layout_landscape.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               if(isStartClicked)
-                   startActivity(new Intent(MainActivity.this, Frames_Activity_lpf.class));
-               else
-                   startActivity(new Intent(MainActivity.this, Albums_Activity_lpf.class));
-                dialog.dismiss();
-            }
-        });
-
-        layout_portrait.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                 if(isStartClicked)
-                     startActivity(new Intent(MainActivity.this, Frames_Activity.class));
-                 else
-                     startActivity(new Intent(MainActivity.this, Albums_Activity.class));
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-    }
-
 }

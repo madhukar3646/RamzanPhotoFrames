@@ -1,5 +1,8 @@
 package com.app.ramzaanphotoframes.classes;
 
+import android.content.Context;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 
 
@@ -11,4 +14,9 @@ public class Utils {
     public static Integer[] positionValues_ads = {2, 7, 10, 15};
     public static String[] positionNames_ads = {"two", "seven", "ten", "fiften"};
     public static int selectpos;
+
+    public static void showInternetToast(Context context)
+    {
+        Toast.makeText(context,"Please check your internet connection and try again",Toast.LENGTH_SHORT).show();
+    }
 }

@@ -51,31 +51,14 @@
             android:name=".activities.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.Frames_Activity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity
-            android:name=".activities.Editing_Activity"
-            android:configChanges="orientation"
-            android:screenOrientation="landscape"
-            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activities.FilterActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.Share_Activity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.Albums_Activity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".landscape_module.activities.Albums_Activity_lpf"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".landscape_module.activities.Frames_Activity_lpf"
             android:screenOrientation="portrait" />
         <activity
             android:name=".landscape_module.activities.Share_Activity_lpf"

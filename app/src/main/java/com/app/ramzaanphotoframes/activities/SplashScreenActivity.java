@@ -87,14 +87,13 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     private void ads_success_intent() {
         this.check_intent = false;
-        //startActivity(new Intent(this, MainActivity.class));
-        startActivity(new Intent(this, HybridFrames_Activity.class));
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 
     private void ad_failed_intent() {
         this.check_intent = false;
-        //startActivity(new Intent(this, MainActivity.class));
-        startActivity(new Intent(this, HybridFrames_Activity.class));
+        startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 

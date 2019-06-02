@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.Editing_Activity">
+    >
 
     <RelativeLayout
         android:id="@+id/root_main_layout"
@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
-            android:scaleType="fitXY"/>
+            android:scaleType="fitXY" />
     </RelativeLayout>
 
     <RelativeLayout

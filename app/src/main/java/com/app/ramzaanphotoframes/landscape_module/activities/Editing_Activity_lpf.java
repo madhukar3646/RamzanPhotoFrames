@@ -49,6 +49,7 @@ import com.app.ramzaanphotoframes.landscape_module.adapters.Image_Adapter;
 import com.app.ramzaanphotoframes.recycler_click_listener.ClickListener;
 import com.app.ramzaanphotoframes.recycler_click_listener.RecyclerTouchListener;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
@@ -186,6 +187,7 @@ public class Editing_Activity_lpf extends AppCompatActivity implements View.OnCl
         textLayoutIniti();
         frame_img_view_layout = (ImageView) findViewById(R.id.frame_img_view_layout);
         Glide.with(context).load(selectedframe)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .placeholder(R.drawable.loading_icon).error(R.drawable.loading_icon)
                 .into(frame_img_view_layout);
 
@@ -263,6 +265,7 @@ public class Editing_Activity_lpf extends AppCompatActivity implements View.OnCl
             public void onClick(View view, int position) {
 
                 Glide.with(context).load(landscape_list.get(position))
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .placeholder(R.drawable.loading_icon).error(R.drawable.loading_icon)
                         .into(frame_img_view_layout);
                 frames_recycler_view.setVisibility(View.GONE);
