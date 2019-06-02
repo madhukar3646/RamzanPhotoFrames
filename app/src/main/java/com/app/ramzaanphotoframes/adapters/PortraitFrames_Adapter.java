@@ -43,6 +43,12 @@ public class PortraitFrames_Adapter extends RecyclerView.Adapter<PortraitFrames_
 
             img_frame = (ImageView) itemView.findViewById(R.id.img_frame);
             layout_root=(RelativeLayout)itemView.findViewById(R.id.layout_root);
+
+            layout_root.getLayoutParams().height = (int) (((context.getResources().getDisplayMetrics().widthPixels)/4)*3);
+            layout_root.getLayoutParams().width = (int) ((context.getResources().getDisplayMetrics().widthPixels) / 2);
+
+            img_frame.getLayoutParams().height = (int)  (((context.getResources().getDisplayMetrics().widthPixels)/4)*3);
+            img_frame.getLayoutParams().width = (int) ((context.getResources().getDisplayMetrics().widthPixels) / 2);
         }
     }
 
@@ -63,11 +69,6 @@ public class PortraitFrames_Adapter extends RecyclerView.Adapter<PortraitFrames_
 
     public void onBindViewHolder(AdapterViewHolder holder, final int position) {
 
-        holder.layout_root.getLayoutParams().height = (int) ((context.getResources().getDisplayMetrics().heightPixels) /3);
-        holder.layout_root.getLayoutParams().width = (int) ((context.getResources().getDisplayMetrics().widthPixels) / 2);
-
-        holder.img_frame.getLayoutParams().height = (int) ((context.getResources().getDisplayMetrics().heightPixels) /3);
-        holder.img_frame.getLayoutParams().width = (int) ((context.getResources().getDisplayMetrics().widthPixels) / 2);
         Glide.with(context).load(portrait_list.get(position))
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .placeholder(R.drawable.loading_icon).error(R.drawable.loading_icon)
