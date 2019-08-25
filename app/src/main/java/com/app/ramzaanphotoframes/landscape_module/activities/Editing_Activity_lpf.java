@@ -24,6 +24,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.Toolbar;
+import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -98,7 +100,7 @@ public class Editing_Activity_lpf extends AppCompatActivity implements View.OnCl
 
     private ArrayList<Typeface> font_styles_List = new ArrayList<>();
     //    private String[] colorCodes;
-    private ImageView imgColorPicker;
+    private ImageView imgColorPicker,iv_close;
     //    TextView txtCancel, txtDone;
     private RecyclerView fontRecyclerView, colorRecyclerView;
     private RelativeLayout colorPicker;
@@ -129,7 +131,7 @@ public class Editing_Activity_lpf extends AppCompatActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -156,10 +158,9 @@ public class Editing_Activity_lpf extends AppCompatActivity implements View.OnCl
         screenHeight = getResources().getDisplayMetrics().heightPixels;
 
         root_main_layout = (RelativeLayout) findViewById(R.id.root_main_layout);
+        root_main_layout.getLayoutParams().height=(screenWidth*60)/100;
 
         options_layout = (RelativeLayout) findViewById(R.id.options_layout);
-        options_layout.getLayoutParams().width = (screenWidth * 10) / 100;
-        options_layout.getBackground().setAlpha(180);
         options_layout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -167,6 +168,13 @@ public class Editing_Activity_lpf extends AppCompatActivity implements View.OnCl
             }
         });
 
+        iv_close=(ImageView)findViewById(R.id.iv_close);
+        iv_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         if (getIntent().getExtras().getString("imageUri") != null) {
             this.myUri = Uri.parse(getIntent().getExtras().getString("imageUri"));
@@ -201,29 +209,19 @@ public class Editing_Activity_lpf extends AppCompatActivity implements View.OnCl
 
     private void initialization_layout() {
         RelativeLayout gallery_layout = (RelativeLayout) findViewById(R.id.gallery_layout);
-        gallery_layout.getLayoutParams().height = (screenHeight * 20) / 100;
-        gallery_layout.getLayoutParams().width = (screenWidth / 5);
         gallery_layout.setOnClickListener(this);
 
         RelativeLayout frames_layout = (RelativeLayout) findViewById(R.id.frames_layout);
-        frames_layout.getLayoutParams().height = (screenHeight * 20) / 100;
-        frames_layout.getLayoutParams().width = (screenWidth / 5);
         frames_layout.setOnClickListener(this);
 
         RelativeLayout effect_layout = (RelativeLayout) findViewById(R.id.effect_layout);
-        effect_layout.getLayoutParams().height = (screenHeight * 20) / 100;
-        effect_layout.getLayoutParams().width = (screenWidth / 5);
         effect_layout.setOnClickListener(this);
 
         RelativeLayout text_layout = (RelativeLayout) findViewById(R.id.text_layout);
-        text_layout.getLayoutParams().height = (screenHeight * 20) / 100;
-        text_layout.getLayoutParams().width = (screenWidth / 5);
         text_layout.setOnClickListener(this);
 
 
         RelativeLayout save_layout = (RelativeLayout) findViewById(R.id.save_layout);
-        save_layout.getLayoutParams().height = (screenHeight * 20) / 100;
-        save_layout.getLayoutParams().width = (screenWidth / 5);
         save_layout.setOnClickListener(this);
     }
 
